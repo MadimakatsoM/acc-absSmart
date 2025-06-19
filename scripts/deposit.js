@@ -19,7 +19,6 @@ async function main() {
     try {
         await EntryPoint.getSenderAddress(initCode);
     } catch (error) {
-        // console.log(error.data);
         sender = "0x" + error.data.data.slice(-40);
     
     }
