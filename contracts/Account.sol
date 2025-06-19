@@ -45,7 +45,7 @@ contract AccountFactory {
 
         bytes memory bytecode = abi.encodePacked(creationCode, abi.encode(owner));
 
-        address addr = Create2.computeAddress(salt, keccak256(bytecode));
+        address addr = Create2.computeAddress(salt, keccak256(bytecode)); // will provided the predicted address of smart wallet
 
         uint256 codeSize = addr.code.length;
         

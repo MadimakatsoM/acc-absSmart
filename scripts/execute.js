@@ -20,10 +20,11 @@ async function main() {
 
     const Account = await hre.ethers.getContractFactory("Account");
     
-    let initCode = AF_address + AccountFactory.interface.encodeFunctionData("createAccount", [addr1]).slice(2);
+    let initCode = AF_address + AccountFactory.interface.encodeFunctionData("createAccount", [addr1]).slice(2); // determines reusability of an address(create a new one/reuse existing)
     // console.log("init code", initCode);
 
     let sender // was getting AA14 initCode must return sender so commented out line 13 to 15 and uncommented out  26 to 31
+    // sender needs to have ablance on the ep to be able to execute UserOps
     try {
         await EntryPoint.getSenderAddress(initCode);
     } catch (error) {
