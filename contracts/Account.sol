@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
+// u
 import "@account-abstraction/contracts/core/EntryPoint.sol";
 import "@account-abstraction/contracts/interfaces/IAccount.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
@@ -31,6 +32,12 @@ contract Account is IAccount {
 
     function counter() external {
         count++;
+    }
+
+    function execute(address target, uint256 value, bytes calldata data) external {
+        require(msg.sender == address(this), "Account: only this account can execute");
+        (bool success, ) = target.call{value: value}(data);
+        require(success, "Account: call failed");
     }
 }
 

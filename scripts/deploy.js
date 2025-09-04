@@ -8,6 +8,12 @@ async function main() {
     const Factory = await hre.ethers.deployContract("AccountFactory");
     await Factory.waitForDeployment();
     console.log(`Factory deployed to ${Factory.target}`);
+
+    const Count = await hre.ethers.deployContract("Counter");
+    await Count.waitForDeployment();
+    console.log(`Count deployed to ${Count.target}`);
+
+
 }
 
 main().catch((error) => {
