@@ -14,33 +14,21 @@ async function main() {
     const Account = await hre.ethers.getContractFactory("Account");
 
 
-
-    // const sender = await hre.ethers.getCreateAddress({
-    //     from : AF_address, 
-    //     nonce: AF_NONCE});
-    // console.log("Sender", sender);
-
     const [signer] = await hre.ethers.getSigners();
-    const addr1 = await signer.getAddress();
+    const addr1 = await signer.getAddress(); // This will be the smart wallet owner
 
 
     let initCode = AF_address + AccountFactory.interface.encodeFunctionData("createAccount", [addr1]).slice(2); // determines reusability of an address(create a new one/reuse existing)
-    // const initCode_ = await Account.createAccount(addr1)
-    // console.log(initCode_, ' is the new init code')
+    
 
-    let sender // was getting AA14 initCode must return sender so commented out line 13 to 15 and uncommented out  26 to 31
-    // sender needs to have a balance on the entry point to be able to execute UserOps
-    // console.log("ebnfoew4")
-    // const user = await EntryPoint.getSenderAddress(initCode);
-    // console.log('USER:',user)
+    let sender // sender needs to have a balance on the entry point to be able to execute UserOps
 
     try {
         sender = await EntryPoint.getSenderAddress(initCode);
+        // This always reverts!!! 
     } catch (error) {
         sender = "0x" + error.data.data.slice(-40);
         console.log('sender: ', sender)
-
-
     }
 
     // const code = await hre.ethers.provider.getCode(sender);
@@ -48,20 +36,12 @@ async function main() {
     //     initCode = "0x";
     // }
 
-    // console.log(await hre.ethers.provider.getCode(sender)); // check if deployed
-    // console.log("sender balance", await EntryPoint.balanceOf(sender));
-
-
-
-    // const nonce = await EntryPoint.getNonce(sender, 0);
+    // For calling an external contract, we first need to encode the original function call
     const incrementFunctionOnExternalContract = COUNTER_CONTRACT.interface.encodeFunctionData("increment");
 
-    // const inc = COUNTER_address.interface.encodeFunctionData("increment");
+    // To call an external function from the smart wallet, we must encode the original function call
+    // inside the execute method from the smart wallet
     const new_counter = Account.interface.encodeFunctionData("execute", [COUNT_address, 0, incrementFunctionOnExternalContract]);
-
-    console.log("new counter", new_counter);
-    // console.log("increment: ", inc);
-
 
 
     // // the goal is to have smart account call another functions from another smart contract
@@ -69,15 +49,15 @@ async function main() {
     userOp = {
         sender,
         nonce: await EntryPoint.getNonce(sender, 0),
-        initCode,
-        callData: new_counter,
+        initCode: '0x', // If the wallet has already been created, pass "0X", otherwise just use the default initCode which creates the wallet
+        callData: new_counter, // call the execute method on the Smart Wallet
         callGasLimit: 400_000,
         verificationGasLimit: 800_000,
         preVerificationGas: 100_000,
         maxFeePerGas: hre.ethers.parseUnits("30", "gwei"), //changed to parseUnits line 56 & 57
         maxPriorityFeePerGas: hre.ethers.parseUnits("30", "gwei"),
         paymasterAndData: "0x",
-        signature: "0x", //why?
+        signature: "0x", // This value will be updated after getting the userOpHash. Keep it like this for now
     }
 
     const userOpHash = await EntryPoint.getUserOpHash(userOp);
@@ -88,15 +68,10 @@ async function main() {
 
 
     const txHash = await EntryPoint.handleOps([userOp], addr1); //was getting a FailedOp(0, "AA23 reverted: ECDSA: invalid signature length") so added signature line 64 & 67
-    // console.log('TX HASH:', txHash)
 
-    // const deployedAccount = await hre.ethers.getContractAt("Account", sender);
+    // Checking to see if external contract function was actually called
     const count = await COUNTER_CONTRACT.count()
     console.log(count.toString(), 'is the count')
-
-    // const deployed = await hre.ethers.getContractAt("Account", sender);
-    // const count = await deployed.count();
-    // console.log("🔁 Updated count:", count.toString());
 
 }
 
