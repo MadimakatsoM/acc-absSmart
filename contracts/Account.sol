@@ -6,6 +6,7 @@ import "@account-abstraction/contracts/core/EntryPoint.sol";
 import "@account-abstraction/contracts/interfaces/IAccount.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/utils/Create2.sol";
+import "hardhat/console.sol";
 
 // IAccount is needed as it's a standard way for smart accounts to verify and proccess userops
 // this smart account doesn't have an address
@@ -35,8 +36,9 @@ contract Account is IAccount {
     }
 
     function execute(address target, uint256 value, bytes calldata data) external {
-        require(msg.sender == address(this), "Account: only this account can execute");
+        require(msg.sender == 0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6 || msg.sender == address(this), "Account: only entrypoint or account can execute");
         (bool success, ) = target.call{value: value}(data);
+        console.log(success);
         require(success, "Account: call failed");
     }
 }
