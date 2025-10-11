@@ -1,8 +1,8 @@
 const hre = require("hardhat");
 
 
-const EP_address = "0x2279b7a0a67db372996a5fab50d91eaa73d2ebe6"
-const AF_address = "0x0b306bf915c4d645ff596e518faf3f9669b97016"
+const EP_address = "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789"
+const AF_address = "0x6B739E5ca92a1F8C40C7D6c1A32533AfE7f7eFc9"
 
 
 async function main() {
