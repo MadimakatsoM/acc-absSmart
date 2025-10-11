@@ -1,0 +1,5 @@
+Storage - permanently stored - can be accessed at anytime
+Memory - temporarily stored just to be used when needed
+calldata - data is passed directly into the function calldata
+
+

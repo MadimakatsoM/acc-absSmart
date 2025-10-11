@@ -2,7 +2,7 @@
 pragma solidity ^0.8.9;
 
 // u
-import "@account-abstraction/contracts/core/EntryPoint.sol";
+// import "@account-abstraction/contracts/core/EntryPoint.sol";
 import "@account-abstraction/contracts/interfaces/IAccount.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/utils/Create2.sol";
@@ -13,6 +13,7 @@ import "hardhat/console.sol";
 contract Account is IAccount {
     uint256 public count; // to debug
     address public owner;
+    address public entryPoint = 0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789;
 
     constructor(address _owner) {
         owner = _owner;
@@ -35,8 +36,13 @@ contract Account is IAccount {
         count++;
     }
 
+    function setEntryPoint(address epAddress) public {
+        // require(entryPoint == address(0), "Account: entry point already set");
+        entryPoint = epAddress;
+    }
+
     function execute(address target, uint256 value, bytes calldata data) external {
-        require(msg.sender == 0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6 || msg.sender == address(this), "Account: only entrypoint or account can execute");
+        require(msg.sender == entryPoint || msg.sender == address(this), "Account: only entrypoint or account can execute");
         (bool success, ) = target.call{value: value}(data);
         console.log(success);
         require(success, "Account: call failed");
