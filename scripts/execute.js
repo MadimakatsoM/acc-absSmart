@@ -53,9 +53,9 @@ async function main() {
     // // the goal is to have smart account call another functions from another smart contract
 
     userOp = {
-        sender,
+        sender:'0x697E4eE54C5ebD525BfEa870D8c1aB256678ad8a',
         nonce: await EntryPoint.getNonce(sender, 0),
-        initCode, // If the wallet has already been created, pass "0X", otherwise just use the default initCode which creates the wallet
+        initCode: '0x', // If the wallet has already been created, pass "0X", otherwise just use the default initCode which creates the wallet
         callData: incrementInternalCount, // call the execute method on the Smart Wallet
         callGasLimit: 400_000,
         verificationGasLimit: 800_000,
