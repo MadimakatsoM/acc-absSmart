@@ -37,7 +37,7 @@ contract Account is IAccount {
     }
 
     function setEntryPoint(address epAddress) public {
-        // require(entryPoint == address(0), "Account: entry point already set");
+        require(entryPoint == address(0), "Account: entry point already set");
         entryPoint = epAddress;
     }
 

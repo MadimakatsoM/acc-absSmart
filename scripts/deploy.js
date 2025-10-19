@@ -1,25 +1,27 @@
+
 const hre = require("hardhat");
+
 
 async function main() {
     const EP = await hre.ethers.deployContract("EntryPoint"); //in charge of processing and executing the UserOps
     await EP.waitForDeployment();
     console.log(`EP deployed to ${EP.target}`);
 
-    // const PayMaster = await hre.ethers.deployContract("Paymaster");
-    // await PayMaster.waitForDeployment();
-    // console.log(`Paymaster deployed to ${PayMaster.target}`);
+    const PayMaster = await hre.ethers.deployContract("Paymaster");
+    await PayMaster.waitForDeployment();
+    console.log(`Paymaster deployed to ${PayMaster.target}`);
 
-    // const Factory = await hre.ethers.deployContract("AccountFactory");
-    // await Factory.waitForDeployment();
-    // console.log(`Factory deployed to ${Factory.target}`);
+    const Factory = await hre.ethers.deployContract("AccountFactory");
+    await Factory.waitForDeployment();
+    console.log(`Factory deployed to ${Factory.target}`);
 
-    const Token = await hre.ethers.deployContract("SmartToken");
-    await Token.waitForDeployment();
-    console.log(`Factory deployed to ${Token.target}`);
+    // const Token = await hre.ethers.deployContract("SmartToken");
+    // await Token.waitForDeployment();
+    // console.log(`Factory deployed to ${Token.target}`);
 
-    // const Count = await hre.ethers.deployContract("Counter");
-    // await Count.waitForDeployment();
-    // console.log(`Count deployed to ${Count.target}`);
+    const Count = await hre.ethers.deployContract("Counter");
+    await Count.waitForDeployment();
+    console.log(`Count deployed to ${Count.target}`);
 
 
 }

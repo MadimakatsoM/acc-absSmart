@@ -2,7 +2,7 @@ const hre = require("hardhat");
 
 
 const EP_address = "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789"
-const AF_address = "0x6B739E5ca92a1F8C40C7D6c1A32533AfE7f7eFc9"
+const AF_address = "0xb4DCfBff9235ac613Daa32ba5ee44727588Ea4ED"
 
 
 async function main() {
@@ -20,12 +20,12 @@ async function main() {
     try {
         await EntryPoint.getSenderAddress(initCode);
     } catch (error) {
-        sender = "0x" + error.data.data.slice(-40);
+        sender = "0x" + error.data.slice(-40);
         console.log('You are here', sender)
     }
 
     await EntryPoint.depositTo(sender, {
-        value: hre.ethers.parseEther("2"),
+        value: hre.ethers.parseEther("0.0001"),
     });
     console.log("deposit was successful to", sender);
     
